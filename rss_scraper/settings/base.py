@@ -126,8 +126,37 @@ SIMPLE_JWT = {
 }
 
 MONGO_HOST = os.environ.get('MONGO_HOST', 'localhost')
-MONGO_PORT = os.environ.get('MONGO_PORT', 27017)
+MONGO_PORT = int(os.environ.get('MONGO_PORT', 27017))
 MONGO_USERNAME = os.environ.get('MONGO_USERNAME', 'rssScraperRole')
 MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD', '123456789')
 MONGO_DATABASE = os.environ.get('MONGO_DATABASE', 'rss-scraper')
 MONGO_COLLECTION = os.environ.get('MONGO_COLLECTION', 'feed')
+
+BROKER_HOST = os.environ.get('BROKER_HOST', 'localhost')
+BROKER_PORT = int(os.environ.get('BROKER_PORT', 5672))
+BROKER_USER = os.environ.get('BROKER_USER', 'admin')
+BROKER_PASSWORD = os.environ.get('BROKER_PASSWORD', 'admin')
+
+REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.environ.get('REDIS_PORT', 6379))
+REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD')
+REDIS_DB = os.environ.get('REDIS_DB', 0)
+REDIS_URI = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_URL = f'amqp://{BROKER_USER}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}//'
+CELERY_RESULT_BACKEND = REDIS_URI
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+RSS_SCRAPER_RABBIT_INFORMATION = {
+    'EXCHANGE': os.environ.get('RSS_SCRAPER_EXCHANGE', 'rss_exchange'),
+    'ROUTING_KEY': os.environ.get('RSS_SCRAPER_ROUTING_KEY', 'rss_routing_key')
+}
+
+QUEUES = {
+    'UPDATE_FEEDS': os.environ.get('UPDATE_FEEDS_QUEUE', 'rss_scraper.update_feeds')
+}
+
+RETRY_FAILURE = int(os.environ.get('RETRY_FAILURE', 3))
