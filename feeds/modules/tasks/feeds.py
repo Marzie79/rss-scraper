@@ -1,5 +1,5 @@
 from feeds.modules.decorators.mongo import mongo_connection
-from feeds.modules.logics.storages import get_all_rss
+from feeds.modules.logics.mongo_interface import get_all_rss
 from feeds.modules.logics.feeds import fetch_feeds
 
 
@@ -33,7 +33,7 @@ def update_feeds(collection):
                     {
                         'id': entry['id'],
                         'account_id': entry['account_id']
-                    }, {"$set": entry},
+                    }, {'$set': entry},
                     upsert=True)
         else:
             collection.delete_many({'rss': rss, 'account_id': rss})

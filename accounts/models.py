@@ -17,28 +17,28 @@ class Account(AbstractBaseUser):
     id = models.UUIDField(default=uuid4,
                           primary_key=True,
                           unique=True,
-                          help_text="Unique identifier for the user account.")
+                          help_text='Unique identifier for the user account.')
     email = models.EmailField(
-        unique=True, help_text="Email address used for user identification.")
+        unique=True, help_text='Email address used for user identification.')
     is_superuser = models.BooleanField(
         default=False,
-        help_text="Indicates whether the user has superuser privileges.")
+        help_text='Indicates whether the user has superuser privileges.')
     is_staff = models.BooleanField(
         default=False,
-        help_text="Indicates whether the user has staff privileges.")
+        help_text='Indicates whether the user has staff privileges.')
     is_active = models.IntegerField(default=IsActiveChoices.ACTIVE.value,
                                     choices=IsActiveChoices.choices,
-                                    help_text="User account status")
+                                    help_text='User account status')
     date_joined = models.DateTimeField(
-        auto_now_add=True, help_text="Time when the user account was created.")
+        auto_now_add=True, help_text='Time when the user account was created.')
     is_deleted = models.BooleanField(
         default=False,
-        help_text="Indicates whether the user account is deleted.")
+        help_text='Indicates whether the user account is deleted.')
     deletion_date = models.DateTimeField(
         null=True,
         blank=True,
         editable=False,
-        help_text="Time when the user account was deleted")
+        help_text='Time when the user account was deleted')
 
     objects = CustomUserManage()
     all_objects = AllCustomUserManager()

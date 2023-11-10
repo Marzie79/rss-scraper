@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 TOKEN_SIGNING_KEY = os.environ.get('TOKEN_SIGNING_KEY')
 
-DEBUG = strtobool(os.environ.get("DEBUG", 'true'))
+DEBUG = strtobool(os.environ.get('DEBUG', 'true'))
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',') if os.environ.get('ALLOWED_HOSTS') else ['*']
 
@@ -95,7 +95,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "accounts.Account"
+AUTH_USER_MODEL = 'accounts.Account'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend'

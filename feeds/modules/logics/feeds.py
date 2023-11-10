@@ -4,7 +4,7 @@ from uuid import uuid4
 import feedparser
 
 from feeds.modules.decorators.mongo import mongo_connection
-from feeds.modules.logics.storages import (store_data, rss_exist)
+from feeds.modules.logics.mongo_interface import (store_data, rss_exist)
 from utilities.exceptions import MultiLanguageException
 from utilities.messages.error import DUPLICATE_RSS
 
