@@ -12,3 +12,13 @@ DUPLICATE_RSS = {
     'en': 'This rss feeds already has existed.',
     'fa': 'اطلاعات وارد شده در حال حاضر موجود است.'
 }
+
+INVALID_ENTRY_ID = {
+    'en': 'The entered id is not correct.',
+    'fa': 'اطلاعات وارد شده صحیح نمی‌باشد.'
+}
+
+INVALID_INPUT = {
+    'en': 'The entered data is not correct.',
+    'fa': 'اطلاعات وارد شده صحیح نمی‌باشد.'
+}
