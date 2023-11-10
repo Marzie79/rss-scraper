@@ -4,6 +4,7 @@ from uuid import uuid4
 import feedparser
 
 from feeds.modules.decorators.mongo import mongo_connection
+from feeds.modules.decorators.utils import retry_failure
 from feeds.modules.logics.mongo_interface import (store_data, rss_exist)
 from utilities.exceptions import MultiLanguageException
 from utilities.messages.error import DUPLICATE_RSS
@@ -39,6 +40,7 @@ def __get_value(entity, field: str):
     return getattr(entity, field) if field in entity else None
 
 
+@retry_failure()
 def fetch_feeds(account_id: uuid4, rss: str) -> List:
     """Fetches and processes RSS feed entries for a given account.
 

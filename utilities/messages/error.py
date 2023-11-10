@@ -22,3 +22,8 @@ INVALID_INPUT = {
     'en': 'The entered data is not correct.',
     'fa': 'اطلاعات وارد شده صحیح نمی‌باشد.'
 }
+
+SERVER_ERROR = {
+    'en': 'An error occurred',
+    'fa': 'خطایی رخ داده است.'
+}
