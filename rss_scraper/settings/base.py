@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     'accounts',
+    'feeds'
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,10 @@ SIMPLE_JWT = {
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'SIGNING_KEY': TOKEN_SIGNING_KEY
 }
+
+MONGO_HOST = os.environ.get('MONGO_HOST', 'localhost')
+MONGO_PORT = os.environ.get('MONGO_PORT', 27017)
+MONGO_USERNAME = os.environ.get('MONGO_USERNAME', 'rssScraperRole')
+MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD', '123456789')
+MONGO_DATABASE = os.environ.get('MONGO_DATABASE', 'rss-scraper')
+MONGO_COLLECTION = os.environ.get('MONGO_COLLECTION', 'feed')
