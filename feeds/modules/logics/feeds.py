@@ -3,28 +3,7 @@ from uuid import uuid4
 
 import feedparser
 
-from feeds.modules.decorators.mongo import mongo_connection
 from feeds.modules.decorators.utils import retry_failure
-from feeds.modules.logics.mongo_interface import (store_data, rss_exist)
-from utilities.exceptions import MultiLanguageException
-from utilities.messages.error import DUPLICATE_RSS
-
-
-@mongo_connection
-def save_feeds(collection, account_id: uuid4, rss: str) -> None:
-    """Save fetched feeds for a given account into MongoDB after checking for duplicates.
-
-    Args:
-        collection: MongoDB collection to store the feeds.
-        account_id (uuid4): The unique identifier for the associated account.
-        rss (str): The RSS feed URL to be fetched and processed.
-    """
-
-    if rss_exist(collection=collection, account_id=account_id, rss=rss):
-        raise MultiLanguageException(DUPLICATE_RSS)
-
-    if feeds := fetch_feeds(account_id=account_id, rss=rss):
-        store_data(collection=collection, feeds=feeds)
 
 
 def __get_value(entity, field: str):
@@ -57,10 +36,10 @@ def fetch_feeds(account_id: uuid4, rss: str) -> List:
     entries_details = {
         'rss': rss,
         'account_id': str(account_id),
-        'feed_title': __get_value(feeds.feed, 'title'),
-        'feed_link': __get_value(feeds.feed, 'link'),
-        'feed_updated': __get_value(feeds.feed, 'updated'),
-        'feed_modified': __get_value(feeds.feed, 'modified')
+        'parent_title': __get_value(feeds.feed, 'title'),
+        'parent_link': __get_value(feeds.feed, 'link'),
+        'parent_updated': __get_value(feeds.feed, 'updated'),
+        'parent_modified': __get_value(feeds.feed, 'modified')
     }
 
     for entry in entries:

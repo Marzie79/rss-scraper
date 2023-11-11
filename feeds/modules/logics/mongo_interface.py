@@ -4,21 +4,30 @@ from typing import List
 from bson.objectid import ObjectId
 
 from feeds.modules.decorators.mongo import mongo_connection
+from feeds.modules.logics.feeds import fetch_feeds
 from utilities.exceptions import MultiLanguageException
-from utilities.messages.error import INVALID_ENTRY_ID
+from utilities.messages.error import (INVALID_ENTRY_ID, DUPLICATE_RSS)
 
 
-def store_data(collection, feeds: List) -> None:
-    """Store feed data in the specified MongoDB collection.
+def __representation(feeds) -> List:
+    """Convert MongoDB feed data representation for serialization.
 
     Args:
-        collection: MongoDB collection to store the feed data.
-        feeds (list): List of dictionaries representing feed entries.
+        feeds: MongoDB feed data.
+
+    Returns:
+        A list of feed entries with desirable format.
     """
-    collection.insert_many(feeds)
+    result = []
+
+    for entry in feeds:
+        entry['_id'] = str(entry['_id'])
+        result.append(entry)
+
+    return result
 
 
-def rss_exist(collection, account_id: uuid4, rss: str) -> bool:
+def __rss_exist(collection, account_id: uuid4, rss: str) -> bool:
     """Check if a specific RSS feed already exists for a given account.
 
     Args:
@@ -29,11 +38,41 @@ def rss_exist(collection, account_id: uuid4, rss: str) -> bool:
     Returns:
         True if the RSS feed exists, False otherwise.
     """
-
+    a = collection.find_one({
+        'account_id': str(account_id),
+        'rss': rss
+    })
     return True if collection.find_one({
         'account_id': str(account_id),
         'rss': rss
     }) else False
+
+
+def __store_data(collection, feeds: List) -> None:
+    """Store feed data in the specified MongoDB collection.
+
+    Args:
+        collection: MongoDB collection to store the feed data.
+        feeds (list): List of dictionaries representing feed entries.
+    """
+    collection.insert_many(feeds)
+
+
+@mongo_connection
+def save_feeds(collection, account_id: uuid4, rss: str) -> None:
+    """Save fetched feeds for a given account into MongoDB after checking for duplicates.
+
+    Args:
+        collection: MongoDB collection to store the feeds.
+        account_id (uuid4): The unique identifier for the associated account.
+        rss (str): The RSS feed URL to be fetched and processed.
+    """
+
+    if __rss_exist(collection=collection, account_id=account_id, rss=rss):
+        raise MultiLanguageException(DUPLICATE_RSS)
+
+    if feeds := fetch_feeds(account_id=account_id, rss=rss):
+        __store_data(collection=collection, feeds=feeds)
 
 
 @mongo_connection
@@ -61,35 +100,13 @@ def add_bookmark(collection,
         raise MultiLanguageException(INVALID_ENTRY_ID)
 
 
-def get_all_rss(collection, fields: List):
-    """Retrieve aggregated data for distinct values of specified fields.
-
-    Parameters:
-        collection: MongoDB collection to query.
-        fields (list): List of fields for which to retrieve distinct values.
-
-    Returns:
-        Aggregation result containing distinct values for specified fields.
-    """
-    data = collection.aggregate([{
-        '$group': {
-            '_id': {
-                field: f'${field}'
-                for field in fields
-            }
-        }
-    }])
-
-    return data
-
-
 @mongo_connection
-def get_account_feeds(connection, limit: int, offset: int,
+def get_account_feeds(collection, limit: int, offset: int,
                       account_id: uuid4) -> List:
     """Retrieve paginated feed data for a specific account.
 
     Args:
-        connection: MongoDB connection to query.
+        collection: MongoDB collection to query.
         limit (int): The number of feed entries to retrieve per page.
         offset (int): The page number to retrieve, with the first page being 1.
         account_id (uuid4): The unique identifier for the associated account.
@@ -97,26 +114,8 @@ def get_account_feeds(connection, limit: int, offset: int,
     Returns:
         A list of feed entries for the specified account, paginated based on the given limit and offset.
     """
-    feeds = connection.find({
+    feeds = collection.find({
         'account_id': str(account_id)
     }).skip(limit * (offset - 1)).limit(limit)
 
-    return to_representation(feeds=feeds)
-
-
-def to_representation(feeds) -> List:
-    """Convert MongoDB feed data representation for serialization.
-
-    Args:
-        feeds: MongoDB feed data.
-
-    Returns:
-        A list of feed entries with desirable format.
-    """
-    result = []
-
-    for entry in feeds:
-        entry['_id'] = str(entry['_id'])
-        result.append(entry)
-
-    return result
+    return __representation(feeds=feeds)

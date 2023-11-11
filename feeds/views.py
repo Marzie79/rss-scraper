@@ -1,9 +1,9 @@
 from rest_framework.response import Response
 from rest_framework import (status, generics)
 
-from feeds.modules.logics.feeds import save_feeds
 from feeds.modules.logics.mongo_interface import (add_bookmark,
-                                                  get_account_feeds)
+                                                  get_account_feeds,
+                                                  save_feeds)
 from feeds.serializers import (AddFeedSerializer, BookmarkFeedSerializer)
 from utilities.exceptions import MultiLanguageException
 from utilities.messages.error import INVALID_INPUT

@@ -1,6 +1,29 @@
+from typing import List
+
 from feeds.modules.decorators.mongo import mongo_connection
-from feeds.modules.logics.mongo_interface import get_all_rss
 from feeds.modules.logics.feeds import fetch_feeds
+
+
+def __get_all_rss(collection, fields: List):
+    """Retrieve aggregated data for distinct values of specified fields.
+
+    Parameters:
+        collection: MongoDB collection to query.
+        fields (list): List of fields for which to retrieve distinct values.
+
+    Returns:
+        Aggregation result containing distinct values for specified fields.
+    """
+    data = collection.aggregate([{
+        '$group': {
+            '_id': {
+                field: f'${field}'
+                for field in fields
+            }
+        }
+    }])
+
+    return data
 
 
 @mongo_connection
@@ -13,7 +36,7 @@ def update_feeds(collection):
     Args:
         collection: MongoDB collection to update.
     """
-    distinct_rss_accounts = get_all_rss(
+    distinct_rss_accounts = __get_all_rss(
         collection=collection, fields=['account_id', 'rss', 'feed_modified'])
 
     for item in distinct_rss_accounts:
@@ -38,8 +61,8 @@ def update_feeds(collection):
         else:
             collection.delete_many({'rss': rss, 'account_id': rss})
 
-    for item in get_all_rss(collection=collection,
-                            fields=['account_id', 'rss', 'feed_modified']):
+    for item in __get_all_rss(collection=collection,
+                              fields=['account_id', 'rss', 'feed_modified']):
         if item not in distinct_rss_accounts:
             collection.delete_one({
                 'rss': item['_id']['rss'],
