@@ -1,1 +1,7 @@
 __pycache__/
+.vscode/
+
+.env
+
+.coverage
+htmlcov/
