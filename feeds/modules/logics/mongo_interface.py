@@ -38,10 +38,6 @@ def __rss_exist(collection, account_id: uuid4, rss: str) -> bool:
     Returns:
         True if the RSS feed exists, False otherwise.
     """
-    a = collection.find_one({
-        'account_id': str(account_id),
-        'rss': rss
-    })
     return True if collection.find_one({
         'account_id': str(account_id),
         'rss': rss
