@@ -37,17 +37,17 @@ def update_feeds(collection):
         collection: MongoDB collection to update.
     """
     distinct_rss_accounts = __get_all_rss(
-        collection=collection, fields=['account_id', 'rss', 'feed_modified'])
+        collection=collection, fields=['account_id', 'rss', 'parent_modified'])
 
     for item in distinct_rss_accounts:
         account_id = item['_id']['account_id']
         rss = item['_id']['rss']
-        feed_modified = item['_id']['feed_modified']
+        parent_modified = item['_id']['parent_modified']
 
         feed_data = fetch_feeds(account_id, rss)
 
-        if feed_data and feed_data[0]['feed_modified'] and feed_data[0][
-                'feed_modified'] == feed_modified:
+        if feed_data and feed_data[0]['parent_modified'] and feed_data[0][
+                'parent_modified'] == parent_modified:
             continue
 
         if feed_data:
@@ -62,10 +62,10 @@ def update_feeds(collection):
             collection.delete_many({'rss': rss, 'account_id': rss})
 
     for item in __get_all_rss(collection=collection,
-                              fields=['account_id', 'rss', 'feed_modified']):
+                              fields=['account_id', 'rss', 'parent_modified']):
         if item not in distinct_rss_accounts:
             collection.delete_one({
                 'rss': item['_id']['rss'],
                 'account_id': item['_id']['account_id'],
-                'feed_modified': item['_id']['feed_modified']
+                'parent_modified': item['_id']['parent_modified']
             })
