@@ -1,0 +1,261 @@
+{
+	"info": {
+		"_postman_id": "55a30b46-7dad-437c-aae2-4ee5ecbec630",
+		"name": "RSS Scraper",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11600154"
+	},
+	"item": [
+		{
+			"name": "authentication",
+			"item": [
+				{
+					"name": "authenticate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"marzie.7900@gmail.com\",\n\t\"password\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url-debug-v1}}accounts/authentication/",
+							"host": [
+								"{{base-url-debug-v1}}accounts"
+							],
+							"path": [
+								"authentication",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMjE0ODkyNCwiaWF0IjoxNjk5NTU2OTI0LCJqdGkiOiI2Njk1MDU4Nzg4NTQ0NmI4OWFjNDU2YTNkNjZlZjlmMyIsInVzZXJfaWQiOiI1ZjM3YzIyOS0wODUwLTRhMDItYTdhMy1lODZlNjg0Y2ExNTUifQ.UGgaqrfz34IgemKBx5cMrRbrSBxnZctQoLT8OlhdaE0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url-debug-v1}}accounts/refresh/",
+							"host": [
+								"{{base-url-debug-v1}}accounts"
+							],
+							"path": [
+								"refresh",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMjE0OTEwMywiaWF0IjoxNjk5NTU3MDkyLCJqdGkiOiJmNTI4MGYzZmY2MTk0ODQxYjE2ZTJmYzBhOTRmMTA1OCIsInVzZXJfaWQiOiI1ZjM3YzIyOS0wODUwLTRhMDItYTdhMy1lODZlNjg0Y2ExNTUifQ.y4lFgRiPe0ulKJZHvD5LyI_zeOSPmSROtOhoUlO0_Ws\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url-debug-v1}}accounts/logout/",
+							"host": [
+								"{{base-url-debug-v1}}accounts"
+							],
+							"path": [
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "feeds",
+			"item": [
+				{
+					"name": "add feed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rss\": \"https://www.nasa.gov/rss/dyn/breaking_news.rss\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url-debug-v1}}feeds/add/",
+							"host": [
+								"{{base-url-debug-v1}}feeds"
+							],
+							"path": [
+								"add",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bookmark feed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"https://www.nasa.gov/?p=565062\",\n    \"bookmark\": true\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url-debug-v1}}feeds/bookmark/",
+							"host": [
+								"{{base-url-debug-v1}}feeds"
+							],
+							"path": [
+								"bookmark",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch feed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"https://www.nasa.gov/?p=565062\",\n    \"bookmark\": true\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url-debug-v1}}feeds/",
+							"host": [
+								"{{base-url-debug-v1}}feeds"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "comment feed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"6551d1a2b134589693095add\",\n    \"comment\": \"This is a great news.\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url-debug-v1}}feeds/comment/",
+							"host": [
+								"{{base-url-debug-v1}}feeds"
+							],
+							"path": [
+								"comment",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
