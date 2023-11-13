@@ -47,11 +47,11 @@ class TestFeedsTask(TestCase):
         self.mock_collection.insert_many([{
             'account_id': str(account_id),
             'rss': self.fixture_rss,
-            'parent_modified': 'test'
+            'parent_updated': 'test'
         }, {
             'account_id': str(uuid4()),
             'rss': 'wrong_data',
-            'parent_modified': 'test'
+            'parent_updated': 'test'
         }])
 
         update_feeds(self.mock_collection)
