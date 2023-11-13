@@ -18,7 +18,9 @@ def mock_decorator(func):
 
 patch('feeds.modules.decorators.mongo.mongo_connection',
       mock_decorator).start()
-from feeds.modules.logics.mongo_interface import add_bookmark, save_feeds, get_account_feeds
+from feeds.modules.logics.mongo_interface import (add_bookmark, save_feeds,
+                                                  get_account_feeds,
+                                                  add_comment)
 
 
 class TestFeeds(TestCase):
@@ -89,6 +91,35 @@ class TestFeeds(TestCase):
 
         with self.assertRaises(MultiLanguageException):
             add_bookmark(self.mock_collection, id_, uuid4())
+
+    def test_add_comment_green(self):
+        """Test adding a comment on an existing entry successfully."""
+        id_ = '5f77c6d132e41f17b0a766ec'
+        account_id = uuid4()
+        data = [{'_id': ObjectId(id_), 'account_id': str(account_id)}]
+        comment = 'This is my comment.'
+
+        self.mock_collection.insert_many(data)
+
+        add_comment(self.mock_collection, id_, account_id, comment)
+
+        updated_document = self.mock_collection.find_one({
+            '_id':
+            ObjectId(id_),
+            'account_id':
+            str(account_id),
+        })
+
+        self.assertIsNotNone(updated_document)
+        self.assertTrue(updated_document.get('comment'))
+
+    def test_add_comment_red(self):
+        """Test attempting to add a comment on a non-existing entry, expecting an exception."""
+        id_ = '5f77c6d132e41f17b0a5b6ec'
+        comment = 'This is my comment.'
+
+        with self.assertRaises(MultiLanguageException):
+            add_comment(self.mock_collection, id_, uuid4(), comment)
 
     def test_get_account_feeds_green(self):
         """Test retrieving feeds for an account successfully."""

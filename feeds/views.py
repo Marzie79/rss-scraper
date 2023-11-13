@@ -1,10 +1,11 @@
 from rest_framework.response import Response
 from rest_framework import (status, generics)
 
-from feeds.modules.logics.mongo_interface import (add_bookmark,
+from feeds.modules.logics.mongo_interface import (add_bookmark, add_comment,
                                                   get_account_feeds,
                                                   save_feeds)
-from feeds.serializers import (AddFeedSerializer, BookmarkFeedSerializer)
+from feeds.serializers import (AddFeedSerializer, BookmarkFeedSerializer,
+                               CommentFeedSerializer)
 from utilities.exceptions import MultiLanguageException
 from utilities.messages.error import INVALID_INPUT
 
@@ -33,6 +34,21 @@ class BookmarkFeedView(generics.GenericAPIView):
         serializer.validated_data['account_id'] = request.user.id
 
         add_bookmark(**serializer.validated_data)
+
+        return Response(status=status.HTTP_200_OK)
+
+
+class CommentFeedView(generics.GenericAPIView):
+    """API view for commenting on a feed."""
+    serializer_class = CommentFeedSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        serializer.validated_data['account_id'] = request.user.id
+
+        add_comment(**serializer.validated_data)
 
         return Response(status=status.HTTP_200_OK)
 

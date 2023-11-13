@@ -97,6 +97,28 @@ def add_bookmark(collection,
 
 
 @mongo_connection
+def add_comment(collection, id: str, account_id: uuid4, comment: str):
+    """Update the bookmark status for a specific entry in the MongoDB collection.
+
+    Args:
+        collection: MongoDB collection to update.
+        id (str): The ObjectId of the entry to be updated.
+        account_id (uuid4): The unique identifier for the associated account.
+        comment (str): The comment of user for a feed..
+    """
+    result = collection.update_one(
+        {
+            '_id': ObjectId(id),
+            'account_id': str(account_id),
+        }, {'$set': {
+            'comment': comment
+        }})
+
+    if not result.matched_count:
+        raise MultiLanguageException(INVALID_ENTRY_ID)
+
+
+@mongo_connection
 def get_account_feeds(collection, limit: int, offset: int,
                       account_id: uuid4) -> List:
     """Retrieve paginated feed data for a specific account.
