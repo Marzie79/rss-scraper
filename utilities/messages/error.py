@@ -27,3 +27,8 @@ SERVER_ERROR = {
     'en': 'An error occurred',
     'fa': 'خطایی رخ داده است.'
 }
+
+WEAK_PASSWORD ={
+    'en': 'Your entered password is not strong enough.',
+    'fa': 'رمز وارد شده شمت به اندازه کافی قوی نمی‌باشد.'
+}

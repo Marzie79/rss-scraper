@@ -12,7 +12,7 @@ class TestFeeds(TestCase):
     def setUpClass(cls):
         """Set up common fixture data for all test cases."""
         cls.fixture_email = 'marzie.7900@gmail.com'
-        cls.fixture_password = '12345'
+        cls.fixture_password = '456fghj^$J'
         super().setUpClass()
 
     def test_sign_in_green(self):
