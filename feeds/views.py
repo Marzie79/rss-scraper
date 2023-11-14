@@ -60,7 +60,7 @@ class GetFeedView(generics.GenericAPIView):
         try:
             offset = int(request.GET.get('offset', 1))
             limit = int(request.GET.get('limit', 4))
-        except ValueError:
+        except (ValueError, TypeError):
             raise MultiLanguageException(INVALID_INPUT)
 
         return Response(data=get_account_feeds(limit=limit,
